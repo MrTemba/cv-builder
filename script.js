@@ -28,9 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const downloadBtn = $('downloadBtn');
   const applyBtn = $('applyBtn');
   const cvPreview = $('cvPreview');
-  const forenamesEl = $('forenames');
-  const middleEl = $('middleName');
-  const surnameEl = $('surname');
 
   // safety: bail if minimal DOM missing
   if (!generateBtn || !cvPreview) {
@@ -108,12 +105,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const div = document.createElement('div');
       div.className = 'edu-block';
       div.innerHTML = `
-        <h4>Higher Education ${eduCount}</h4>
+        <h4>Education/Training ${eduCount}</h4>
         <label>Institution</label><input type="text" id="institution${eduCount}">
-        <label>Degree</label><input type="text" id="degree${eduCount}">
+        <label>Degree/Certificate</label><input type="text" id="degree${eduCount}">
         <label>Field</label><input type="text" id="field${eduCount}">
         <label>Year Start</label><input type="date" id="yearStart${eduCount}">
         <label>Year End</label><input type="date" id="yearEnd${eduCount}">
+        <label>Grade/GPA (optional)</label><input type="text" id="gpa${eduCount}">
         <button type="button" class="remove-btn">Remove</button>
         <hr>
       `;
@@ -167,40 +165,76 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Build preview HTML safely
   function buildPreviewHtml() {
-    const forenames = escapeHtml(trim(forenamesEl?.value));
-    const middle = escapeHtml(trim(middleEl?.value));
-    const surname = escapeHtml(trim(surnameEl?.value));
-    const imgSrc = profilePreview?.src || '';
-    const dob = escapeHtml(trim($('dob')?.value));
+    // Personal details
+    const fullName = escapeHtml(trim($('fullName')?.value));
+    const gender = escapeHtml(trim($('gender')?.value));
+    const maritalStatus = escapeHtml(trim($('maritalStatus')?.value));
+    const children = escapeHtml(trim($('children')?.value));
+    const nationality = escapeHtml(trim($('nationality')?.value));
+    const nrc = escapeHtml(trim($('nrc')?.value));
+    const tpin = escapeHtml(trim($('tpin')?.value));
+    const napsa = escapeHtml(trim($('napsa')?.value));
+    const postalAddress = escapeHtml(trim($('postalAddress')?.value));
+    const residentialAddress = escapeHtml(trim($('residentialAddress')?.value));
+    const town = escapeHtml(trim($('town')?.value));
+    const plotNo = escapeHtml(trim($('plotNo')?.value));
     const phone = escapeHtml(trim($('phone')?.value));
+    const altPhone = escapeHtml(trim($('altPhone')?.value));
     const email = escapeHtml(trim($('email')?.value));
-    const address = escapeHtml(trim($('address')?.value));
-    const summary = escapeHtml(trim($('summary')?.value));
-    const skillsRaw = escapeHtml(trim($('skills')?.value));
-    const skillsArr = skillsRaw ? skillsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+    // Employment info
+    const position = escapeHtml(trim($('position')?.value));
+    const altPosition = escapeHtml(trim($('altPosition')?.value));
+    const expectedPay = escapeHtml(trim($('expectedPay')?.value));
+    const otherExpectations = escapeHtml(trim($('otherExpectations')?.value));
+    const startDate = escapeHtml(trim($('startDate')?.value));
+    const reasonLeaving = escapeHtml(trim($('reasonLeaving')?.value));
+    const currentOccupation = escapeHtml(trim($('currentOccupation')?.value));
+    const driversLicense = escapeHtml(trim($('driversLicense')?.value));
+    // Health info
+    const health = escapeHtml(trim($('health')?.value));
+    const illnesses = escapeHtml(trim($('illnesses')?.value));
+    const allergies = escapeHtml(trim($('allergies')?.value));
+    const disabilities = escapeHtml(trim($('disabilities')?.value));
+    // Certifications
+    const certifications = escapeHtml(trim($('certifications')?.value));
+    // Additional info
+    const achievements = escapeHtml(trim($('achievements')?.value));
+    const attributes = escapeHtml(trim($('attributes')?.value));
     const hobbiesRaw = escapeHtml(trim($('hobbies')?.value));
     const hobbiesArr = hobbiesRaw ? hobbiesRaw.split(',').map(h => h.trim()).filter(Boolean) : [];
+    // Declaration
+    const declarationDate = escapeHtml(trim($('declarationDate')?.value));
+    const signature = escapeHtml(trim($('signature')?.value));
 
-    const contactInfo = `
-      <div class="contact-info">
-        ${dob ? `<p><span class="cv-icon">&#x1F4C5;</span> ${dob}</p>` : ''}
-        ${address ? `<p><span class="cv-icon">&#x1F4CD;</span> ${address}</p>` : ''}
-        ${phone ? `<p><span class="cv-icon">&#x260E;</span> ${phone}</p>` : ''}
-        ${email ? `<p><span class="cv-icon">&#x2709;</span> ${email}</p>` : ''}
-      </div>
-    `;
+    // Profile picture
+    const imgSrc = profilePreview?.src || '';
+    const leftPic = imgSrc ? `<img src="${imgSrc}" class="cv-pic">` : '';
 
-    const summaryBlock = summary ? `<div class="cv-summary"><h4>Profile</h4><p>${summary}</p></div>` : '';
+    // Education blocks
+    const eduBlocks = educationContainer ? educationContainer.querySelectorAll('.edu-block') : [];
+    let eduHTML = '';
+    eduBlocks.forEach((block, idx) => {
+      const i = idx + 1;
+      const institution = escapeHtml(trim(block.querySelector(`#institution${i}`)?.value || ''));
+      const degree = escapeHtml(trim(block.querySelector(`#degree${i}`)?.value || ''));
+      const field = escapeHtml(trim(block.querySelector(`#field${i}`)?.value || ''));
+      const yearStart = escapeHtml(trim(block.querySelector(`#yearStart${i}`)?.value || ''));
+      const yearEnd = escapeHtml(trim(block.querySelector(`#yearEnd${i}`)?.value || ''));
+      const gpa = escapeHtml(trim(block.querySelector(`#gpa${i}`)?.value || ''));
+      if (institution || degree) {
+        eduHTML += `
+          <div class="cv-card">
+            <div class="cv-card-title">
+              <strong>${degree || 'Qualification'}</strong> ${field ? 'in ' + field : ''}
+            </div>
+            <div class="cv-card-meta">${institution}${(yearStart||yearEnd) ? ` (${yearStart || ''} - ${yearEnd || ''})` : ''}</div>
+            ${gpa ? `<div class="cv-card-meta">Grade/GPA: ${gpa}</div>` : ''}
+          </div>
+        `;
+      }
+    });
 
-    const skillsBlock = skillsArr.length
-      ? `<div class="cv-skills"><h4>Skills</h4><ul>${skillsArr.map(skill => `<li>${skill}</li>`).join('')}</ul></div>`
-      : '';
-
-    const hobbiesBlock = hobbiesArr.length
-      ? `<div class="cv-hobbies"><h4>Hobbies</h4><ul>${hobbiesArr.map(hobby => `<li>${hobby}</li>`).join('')}</ul></div>`
-      : '';
-
-    // Experiences
+    // Experience blocks
     const expBlocks = experienceContainer ? experienceContainer.querySelectorAll('.exp-block') : [];
     let expHTML = '';
     expBlocks.forEach((block, idx) => {
@@ -219,28 +253,6 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="cv-card-meta">${start || ''}${start && end ? ' - ' : ''}${end || ''}</div>
             <div class="cv-resp">${resp || ''}</div>
-          </div>
-        `;
-      }
-    });
-
-    // Education
-    const eduBlocks = educationContainer ? educationContainer.querySelectorAll('.edu-block') : [];
-    let eduHTML = '';
-    eduBlocks.forEach((block, idx) => {
-      const i = idx + 1;
-      const institution = escapeHtml(trim(block.querySelector(`#institution${i}`)?.value || ''));
-      const degree = escapeHtml(trim(block.querySelector(`#degree${i}`)?.value || ''));
-      const field = escapeHtml(trim(block.querySelector(`#field${i}`)?.value || ''));
-      const yearStart = escapeHtml(trim(block.querySelector(`#yearStart${i}`)?.value || ''));
-      const yearEnd = escapeHtml(trim(block.querySelector(`#yearEnd${i}`)?.value || ''));
-      if (institution || degree) {
-        eduHTML += `
-          <div class="cv-card">
-            <div class="cv-card-title">
-              <strong>${degree || 'Qualification'}</strong> ${field ? 'in ' + field : ''}
-            </div>
-            <div class="cv-card-meta">${institution}${(yearStart||yearEnd) ? ` (${yearStart || ''} - ${yearEnd || ''})` : ''}</div>
           </div>
         `;
       }
@@ -286,34 +298,103 @@ document.addEventListener('DOMContentLoaded', () => {
       languagesBlock += `</ul></div>`;
     }
 
-    const leftPic = imgSrc ? `<img src="${imgSrc}" class="cv-pic">` : '';
-    const nameLine = `<h3 class="cv-name">${forenames} ${middle} ${surname}</h3>`;
+    // Hobbies
+    let hobbiesBlock = '';
+    if (hobbiesArr.length) {
+      hobbiesBlock = `<div class="cv-hobbies"><h4>Hobbies & Past Activities</h4><ul>${hobbiesArr.map(hobby => `<li>${hobby}</li>`).join('')}</ul></div>`;
+    }
 
+    // Health Info Block
+    let healthBlock = `
+      <h4 class="cv-heading">Health Information</h4>
+      <div class="cv-card">
+        <p><strong>State of Health:</strong> ${health}</p>
+        ${illnesses ? `<p><strong>Illnesses:</strong> ${illnesses}</p>` : ''}
+        ${allergies ? `<p><strong>Allergies:</strong> ${allergies}</p>` : ''}
+        ${disabilities ? `<p><strong>Disabilities:</strong> ${disabilities}</p>` : ''}
+      </div>
+    `;
+
+    // Profile summary (now from attributes field)
+    let profileSummary = '';
+    if (attributes) {
+      profileSummary = `<div class="cv-summary"><h4>Profile</h4><p>${attributes}</p></div>`;
+    }
+
+    // Achievements block
+    let achievementsBlock = '';
+    if (achievements) {
+      achievementsBlock = `<div class="cv-card"><p><strong>Special Achievements:</strong> ${achievements}</p></div>`;
+    }
+
+    // Build two-column preview HTML (balanced)
     return `
       <div class="cv-preview-bg">
-        <div class="cv-preview-main">
-          ${leftPic}
-          ${nameLine}
-          ${contactInfo}
-          ${summaryBlock}
-          ${skillsBlock}
-          ${hobbiesBlock}
-          ${languagesBlock}
-          <h4 class="cv-heading">Work Experience</h4>
-          ${expHTML || '<p class="cv-empty">No work experience added.</p>'}
-          <h4 class="cv-heading">Higher Education</h4>
-          ${eduHTML || '<p class="cv-empty">No higher education added.</p>'}
-          ${referencesBlock}
+        <div class="cv-grid">
+          <div class="cv-left">
+            ${leftPic}
+            <h3 class="cv-name">${fullName}</h3>
+            <div class="contact-info">
+              <p><strong>Gender:</strong> ${gender}</p>
+              <p><strong>Marital Status:</strong> ${maritalStatus}</p>
+              <p><strong>No. of Children:</strong> ${children}</p>
+              <p><strong>Nationality:</strong> ${nationality}</p>
+              <p><strong>NRC #:</strong> ${nrc}</p>
+              <p><strong>TPIN:</strong> ${tpin}</p>
+              <p><strong>NAPSA SSN:</strong> ${napsa}</p>
+              <p><strong>Postal Address:</strong> ${postalAddress}</p>
+              ${residentialAddress ? `<p><strong>Residential Address:</strong> ${residentialAddress}</p>` : ''}
+              <p><strong>Town:</strong> ${town}</p>
+              <p><strong>Plot No:</strong> ${plotNo}</p>
+              <p><strong>Phone:</strong> ${phone}</p>
+              ${altPhone ? `<p><strong>Alternate Phone:</strong> ${altPhone}</p>` : ''}
+              <p><strong>Email:</strong> ${email}</p>
+            </div>
+            ${healthBlock}
+            ${profileSummary}
+            ${achievementsBlock}
+            ${hobbiesBlock}
+            ${languagesBlock}
+          </div>
+          <div class="cv-right">
+            <h4 class="cv-heading">Employment Information</h4>
+            <div class="cv-card">
+              <p><strong>Position Applied For:</strong> ${position}</p>
+              ${altPosition ? `<p><strong>Alternate Position:</strong> ${altPosition}</p>` : ''}
+              <p><strong>Expected Minimum Gross Pay:</strong> ${expectedPay}</p>
+              ${otherExpectations ? `<p><strong>Other Expectations:</strong> ${otherExpectations}</p>` : ''}
+              <p><strong>Ready to Start Date:</strong> ${startDate}</p>
+              ${reasonLeaving ? `<p><strong>Reason for Leaving Last Employment:</strong> ${reasonLeaving}</p>` : ''}
+              ${currentOccupation ? `<p><strong>Current Occupation:</strong> ${currentOccupation}</p>` : ''}
+              <p><strong>Valid Driver’s License:</strong> ${driversLicense}</p>
+            </div>
+            <h4 class="cv-heading">Education & Training</h4>
+            ${eduHTML || '<p class="cv-empty">No education/training added.</p>'}
+            <h4 class="cv-heading">Certifications & Learning</h4>
+            ${certifications ? `<div class="cv-card"><p>${certifications}</p></div>` : ''}
+            <h4 class="cv-heading">Work Experience</h4>
+            ${expHTML || '<p class="cv-empty">No work experience added.</p>'}
+            ${referencesBlock}
+            <h4 class="cv-heading">Declaration</h4>
+            <div class="cv-card">
+              <p>I certify that the information provided is true and correct to the best of my knowledge.</p>
+              <p><strong>Date:</strong> ${declarationDate}</p>
+              <p><strong>Signature:</strong> ${signature}</p>
+            </div>
+          </div>
         </div>
       </div>
     `;
   }
 
   // --- Auto-preview as you type ---
-  const autoPreviewFields = [
-    'forenames', 'middleName', 'surname', 'dob', 'phone', 'email', 'address', 'summary', 'skills', 'hobbies'
-  ];
-  autoPreviewFields.forEach(id => {
+  [
+    'fullName', 'gender', 'maritalStatus', 'children', 'nationality', 'nrc', 'tpin', 'napsa',
+    'postalAddress', 'residentialAddress', 'town', 'plotNo', 'phone', 'altPhone', 'email',
+    'position', 'altPosition', 'expectedPay', 'otherExpectations', 'startDate', 'reasonLeaving',
+    'currentOccupation', 'driversLicense', 'health', 'illnesses', 'allergies', 'disabilities',
+    'certifications', 'achievements', 'attributes', 'hobbies', 'declarationDate', 'signature'
+  ].forEach(id => {
     const el = $(id);
     if (el) el.addEventListener('input', () => {
       cvPreview.innerHTML = buildPreviewHtml();
@@ -321,22 +402,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Also update preview when adding/removing experience/education
-  experienceContainer.addEventListener('input', () => {
-    cvPreview.innerHTML = buildPreviewHtml();
-    if (downloadBtn) downloadBtn.disabled = false;
-  });
-  educationContainer.addEventListener('input', () => {
-    cvPreview.innerHTML = buildPreviewHtml();
-    if (downloadBtn) downloadBtn.disabled = false;
-  });
-  referenceContainer.addEventListener('input', () => {
-    cvPreview.innerHTML = buildPreviewHtml();
-    if (downloadBtn) downloadBtn.disabled = false;
-  });
-  languageContainer.addEventListener('input', () => {
-    cvPreview.innerHTML = buildPreviewHtml();
-    if (downloadBtn) downloadBtn.disabled = false;
+  // Also update preview when adding/removing experience/education/reference/language
+  [experienceContainer, educationContainer, referenceContainer, languageContainer].forEach(container => {
+    if (container) {
+      container.addEventListener('input', () => {
+        cvPreview.innerHTML = buildPreviewHtml();
+        if (downloadBtn) downloadBtn.disabled = false;
+      });
+    }
   });
 
   // Preview (generate) button still works
@@ -363,12 +436,42 @@ document.addEventListener('DOMContentLoaded', () => {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
         const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
         const margin = 40;
         const imgWidth = pageWidth - margin * 2;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-        doc.addImage(imgData, 'PNG', margin, margin, imgWidth, imgHeight);
-        doc.save('CV.pdf');
+        let position = margin;
+        let remainingHeight = imgHeight;
+        let imgY = 0;
+
+        // If image fits on one page
+        if (imgHeight <= pageHeight - margin * 2) {
+          doc.addImage(imgData, 'PNG', margin, margin, imgWidth, imgHeight);
+        } else {
+          // Multi-page logic
+          let pageCount = Math.ceil(imgHeight / (pageHeight - margin * 2));
+          for (let i = 0; i < pageCount; i++) {
+            let sourceY = (canvas.height / imgHeight) * (i * (pageHeight - margin * 2));
+            let sourceHeight = (canvas.height / imgHeight) * Math.min(pageHeight - margin * 2, remainingHeight);
+
+            // Create a temp canvas for each page
+            let pageCanvas = document.createElement('canvas');
+            pageCanvas.width = canvas.width;
+            pageCanvas.height = sourceHeight;
+            let ctx = pageCanvas.getContext('2d');
+            ctx.drawImage(
+              canvas,
+              0, sourceY, canvas.width, sourceHeight,
+              0, 0, canvas.width, sourceHeight
+            );
+            let pageImgData = pageCanvas.toDataURL('image/png');
+            doc.addImage(pageImgData, 'PNG', margin, margin, imgWidth, (sourceHeight * imgWidth) / canvas.width);
+            if (i < pageCount - 1) doc.addPage();
+            remainingHeight -= (pageHeight - margin * 2);
+          }
+        }
+        doc.save('Employment-Form.pdf');
       } catch (err) {
         console.error('PDF export failed:', err);
         alert('PDF export failed — check console for details.');
