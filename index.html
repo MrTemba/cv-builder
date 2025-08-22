@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CV Builder</title>
+  <title>T3C Employment Data Form</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -12,8 +12,8 @@
 
 <h2>LUMBUKA INVESTMENTS / T3C Gardens</h2>
 <p>
-  <strong>CV Builder</strong><br>
-  Fill in your details below to generate a professional CV. You can preview, download as PDF, or apply online.<br>
+  <strong>Employment Data Form</strong><br>
+  Fill in your details below to generate a professional employment record. You can preview, download as PDF, or apply online.<br>
 </p>
 
 <div class="builder">
@@ -27,75 +27,129 @@
 </div>
 
 <div id="cvBuilder">
-<!-- Profile picture -->
-<div class="input-group">
-  <label>Profile Picture:</label>
-  <input type="file" id="profilePic" accept="image/*">
-  <img id="profilePreview" src="" alt="Profile Preview" style="max-width:100px; display:none;">
-</div>
+  <!-- Profile picture -->
+  <div class="input-group">
+    <label>Profile Picture:</label>
+    <input type="file" id="profilePic" accept="image/*">
+    <img id="profilePreview" src="" alt="Profile Preview" style="max-width:110px; display:none;">
+  </div>
 
-<!-- Basic info -->
-<div class="input-group">
-  <label>Forenames</label><input type="text" id="forenames">
-  <label>Middle Name</label><input type="text" id="middleName">
-  <label>Surname</label><input type="text" id="surname">
-  <label>Date of Birth</label><input type="date" id="dob">
-  <label>Phone</label><input type="text" id="phone">
-  <label>Email</label><input type="text" id="email">
-  <label>Address</label><input type="text" id="address">
-</div>
+  <!-- Personal Details -->
+  <div class="input-group">
+    <label>Full Name <span style="color:red">*</span></label><input type="text" id="fullName" required>
+    <label>Gender <span style="color:red">*</span></label>
+    <select id="gender" required>
+      <option value="">Select</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+    </select>
+    <label>Marital Status <span style="color:red">*</span></label>
+    <select id="maritalStatus" required>
+      <option value="">Select</option>
+      <option value="Single">Single</option>
+      <option value="Married">Married</option>
+      <option value="Divorced">Divorced</option>
+      <option value="Widowed">Widowed</option>
+    </select>
+    <label>No. of Children</label><input type="number" id="children" min="0">
+    <label>Nationality <span style="color:red">*</span></label><input type="text" id="nationality" required>
+    <label>NRC # <span style="color:red">*</span></label><input type="text" id="nrc" required>
+    <label>TPIN <span style="color:red">*</span></label><input type="text" id="tpin" required>
+    <label>NAPSA SSN <span style="color:red">*</span></label><input type="text" id="napsa" required>
+    <label>Postal Address <span style="color:red">*</span></label><input type="text" id="postalAddress" required>
+    <label>Residential Address (optional)</label><input type="text" id="residentialAddress">
+    <label>Town</label><input type="text" id="town">
+    <label>Plot No</label><input type="text" id="plotNo">
+    <label>Phone <span style="color:red">*</span></label><input type="text" id="phone" required>
+    <label>Alternate Phone</label><input type="text" id="altPhone">
+    <label>Email <span style="color:red">*</span></label><input type="email" id="email" required>
+  </div>
 
-<!-- Professional Summary -->
-<div class="input-group">
-  <label>Profile</label>
-  <textarea id="summary" rows="3" placeholder="e.g. Enthusiastic software engineering student with strong problem-solving skills and a passion for building scalable web applications"></textarea>
-</div>
+  <!-- Employment Information -->
+  <div class="input-group">
+    <label>Position Applied For <span style="color:red">*</span></label><input type="text" id="position" required>
+    <label>Alternate Position of Interest</label><input type="text" id="altPosition">
+    <label>Expected Minimum Gross Pay</label><input type="text" id="expectedPay">
+    <label>Other Expectations</label><input type="text" id="otherExpectations">
+    <label>Ready to Start Date <span style="color:red">*</span></label><input type="date" id="startDate" required>
+    <label>Reason for Leaving Last Employment</label><input type="text" id="reasonLeaving">
+    <label>Current Occupation (if not working)</label><input type="text" id="currentOccupation">
+    <label>Valid Driver’s License?</label>
+    <select id="driversLicense">
+      <option value="">Select</option>
+      <option value="Yes">Yes</option>
+      <option value="No">No</option>
+    </select>
+  </div>
 
-<!-- Work Experience -->
-<div class="input-group">
-  <button type="button" id="addExperienceBtn" style="margin-bottom:12px;">Add Work Experience</button>
-  <div id="experienceContainer"></div>
-</div>
+  <!-- Health Information -->
+  <div class="input-group">
+    <label>State of Health</label><input type="text" id="health">
+    <label>Illnesses (comma separated)</label><input type="text" id="illnesses" placeholder="e.g. Asthma, Diabetes">
+    <label>Allergies (comma separated)</label><input type="text" id="allergies" placeholder="e.g. Penicillin, Nuts">
+    <label>Disabilities</label><input type="text" id="disabilities">
+  </div>
 
-<!-- Higher Education -->
-<div class="input-group">
-  <button type="button" id="addEducationBtn" style="margin-bottom:12px;">Add Higher Education</button>
-  <div id="educationContainer"></div>
-</div>
+  <!-- Education & Training -->
+  <div class="input-group">
+    <button type="button" id="addEducationBtn" style="margin-bottom:12px;">Add Education/Training</button>
+    <div id="educationContainer"></div>
+  </div>
 
-<!-- Skills -->
-<div class="input-group">
-  <label>Skills (comma separated)</label>
-  <input type="text" id="skills" placeholder="e.g. Leadership, Excel, Communication">
-</div>
+  <!-- Certifications & Learning -->
+  <div class="input-group">
+    <label>Certifications/Trainings (comma separated)</label>
+    <input type="text" id="certifications" placeholder="e.g. ACCA, First Aid, Forklift Operator">
+  </div>
 
-<!-- Hobbies -->
-<div class="input-group">
-  <label>Hobbies (comma separated)</label>
-  <input type="text" id="hobbies" placeholder="e.g. Reading, Football, Cooking">
-</div>
+  <!-- Work Experience -->
+  <div class="input-group">
+    <button type="button" id="addExperienceBtn" style="margin-bottom:12px;">Add Work Experience</button>
+    <div id="experienceContainer"></div>
+  </div>
 
-<!-- References -->
-<div class="input-group">
-  <button type="button" id="addReferenceBtn">Add Reference</button>
-  <div id="referenceContainer"></div>
-</div>
+  <!-- Additional Info -->
+  <div class="input-group">
+    <label>Special Achievements</label><input type="text" id="achievements">
+    <label>Profile</label>
+    <input type="text" id="attributes" placeholder="e.g. Enthusiastic software engineering student with strong problem-solving skills and a passion for building scalable web applications">
+    <label>Hobbies & Past Activities (comma separated)</label>
+    <input type="text" id="hobbies" placeholder="e.g. Reading, Football, Cooking">
+  </div>
 
-<!-- Languages -->
-<div class="input-group">
-  <button type="button" id="addLanguageBtn">Add Language</button>
-  <div id="languageContainer"></div>
-</div>
+  <!-- References -->
+  <div class="input-group">
+    <button type="button" id="addReferenceBtn" style="margin-bottom:12px;">Add Reference</button>
+    <div id="referenceContainer"></div>
+  </div>
 
-<!-- Buttons -->
-<div class="input-group">
-  <button id="generateBtn">Preview CV</button>
-  <button id="downloadBtn" disabled>Download PDF</button>
-  <button id="applyBtn">Apply Online</button>
-</div>
+  <!-- Languages -->
+  <div class="input-group">
+    <button type="button" id="addLanguageBtn" style="margin-bottom:12px;">Add Language</button>
+    <div id="languageContainer"></div>
+  </div>
 
-<!-- Preview -->
-<div id="cvPreview" style="border:1px solid #000; padding:10px; margin-top:10px;"></div>
+  <!-- Declaration / Warning -->
+  <div class="input-group">
+    <p style="color:#d32f2f; font-weight:600;">
+      ⚠️ Please make sure you have downloaded your CV and attach it to the email before applying.<br>
+      ⚠️ Make sure the details you provide are accurate, as they will be used for your official employment records.<br>
+      <br>
+      I certify that the information provided is true and correct to the best of my knowledge.
+    </p>
+    <label>Date <span style="color:red">*</span></label><input type="date" id="declarationDate" required>
+    <label>Signature (type your name) <span style="color:red">*</span></label><input type="text" id="signature" required>
+  </div>
+
+  <!-- Buttons -->
+  <div class="input-group">
+    <button id="generateBtn">Preview CV</button>
+    <button id="downloadBtn" disabled>Download PDF</button>
+    <button id="applyBtn">Apply Online</button>
+  </div>
+
+  <!-- Preview -->
+  <div id="cvPreview" style="border:1px solid #000; padding:10px; margin-top:10px;"></div>
 </div>
 
 <script src="script.js"></script>
