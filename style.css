@@ -39,7 +39,8 @@ p {
     margin: 16px auto;
     max-width: 600px;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column; 
+    align-items: flex-start; 
     gap: 16px;
 }
 
@@ -86,6 +87,16 @@ p {
     background: #1565c0;
 }
 
+.input-group > button[id^="add"] {
+  font-size: 0.95rem;
+  padding: 7px 14px;
+  margin-bottom: 8px;
+  width: auto;
+  min-width: 120px;
+  max-width: 180px;
+  align-self: flex-start;
+}
+
 #profilePreview {
     display: block;
     margin-top: 8px;
@@ -107,21 +118,28 @@ p {
 
 .cv-grid {
   display: flex;
-  gap: 40px;
+  gap: 32px;
   flex-wrap: wrap;
 }
 
 .cv-left {
   flex: 1 1 220px;
-  max-width: 220px;
-  text-align: center;
+  max-width: 260px;
+  min-width: 180px;
+  text-align: left;
   border-right: 1px solid #e0e0e0;
-  padding-right: 32px;
+  padding-right: 24px;
+  align-items: flex-start;
 }
 
 .cv-right {
   flex: 2 1 400px;
-  padding-left: 32px;
+  padding-left: 24px;
+  min-width: 300px;
+}
+
+.cv-left .cv-name {
+  text-align: center;
 }
 
 .cv-pic {
@@ -257,6 +275,19 @@ p {
   }
 }
 
+@media (max-width: 900px) {
+  .cv-grid {
+    flex-direction: column;
+    gap: 0;
+  }
+  .cv-left, .cv-right {
+    max-width: 100%;
+    min-width: 0;
+    padding: 0;
+    border: none;
+  }
+}
+
 /* Input readability for all themes */
 .input-group input,
 .input-group textarea,
@@ -364,12 +395,7 @@ body.dark #cvBuilder button:hover {
 .exp-block label,
 .exp-block input[type="text"],
 .exp-block input[type="date"],
-.exp-block textarea {
-  display: block;
-  width: 100%;
-  margin-bottom: 8px;
-}
-
+.exp-block textarea,
 .edu-block label,
 .edu-block input[type="text"],
 .edu-block input[type="date"],
@@ -390,4 +416,10 @@ body.dark #cvBuilder button:hover {
     width: 100% !important;
     margin-right: 0 !important;
   }
+}
+
+/***** Page-break helpers for PDF export *****/
+.cv-heading, .cv-card, .cv-summary, .cv-skills, .cv-hobbies, .cv-empty {
+  page-break-inside: avoid;
+  break-inside: avoid;
 }
